@@ -5,7 +5,7 @@
 .db  "NES", $1a     ;identification of the iNES header
 .db  PRG_COUNT      ;number of 16KB PRG-ROM pages
 .db  $01            ;number of 8KB CHR-ROM pages
-.db  $70|MIRRORING  ;mapper 7
+.db  $00            ;NROM
 .dsb $09, $00       ;clear the remaining bytes
 
 .fillvalue $ff      ; Sets all unused space in rom to value $ff
@@ -55,35 +55,35 @@ OAMDMA    .equ $4014
 ;;;;;;;;;;;;;;;;;
 
 reset:
-  sei             ; disable irqs
-  cld             ; disable decimal mode
-  ldx #$40
-  stx $4017       ; disable apu frame irq
-  ldx #$ff
-  txs             ; set up stack
-  inx             ; now x = 0
-  stx PPUCTRL     ; disable nmi
-  stx PPUMASK     ; disable rendering
-  stx $4010       ; disable dmc irqs
+    sei             ; disable irqs
+    cld             ; disable decimal mode
+    ldx #$40
+    stx $4017       ; disable apu frame irq
+    ldx #$ff
+    txs             ; set up stack
+    inx             ; now x = 0
+    stx PPUCTRL     ; disable nmi
+    stx PPUMASK     ; disable rendering
+    stx $4010       ; disable dmc irqs
 
 vblankwait1:      ; first wait for vblank to make sure ppu is ready
-  bit PPUSTATUS
-  bpl vblankwait1
+    bit PPUSTATUS
+    bpl vblankwait1
 
 clrmem:
-  lda #$00
-  sta $0000, x
-  sta $0100, x
-  sta $0300, x
-  sta $0400, x
-  sta $0500, x
-  sta $0600, x
-  sta $0700, x
-  lda #$fe
-  sta $0200, x    ; move all sprites off screen
-  inx
-  bne clrmem
+    lda #$00
+    sta $0000, x
+    sta $0100, x
+    sta $0300, x
+    sta $0400, x
+    sta $0500, x
+    sta $0600, x
+    sta $0700, x
+    lda #$fe
+    sta $0200, x    ; move all sprites off screen
+    inx
+    bne clrmem
 
 vblankwait2:      ; second wait for vblank, ppu is ready after this
-  bit PPUSTATUS
-  bpl vblankwait2
+    bit PPUSTATUS
+    bpl vblankwait2
