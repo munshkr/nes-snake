@@ -1,5 +1,6 @@
 include "src/head.asm"
 include "src/main.asm"
+include "src/pads.asm"
 include "src/tables.asm"
 include "src/vectors.asm"
 

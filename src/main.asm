@@ -28,7 +28,7 @@ load_sprites:
 
 main:
   ; Game logic
-  ; ...
+  jsr read_pads
 
   ; Wait for vblank to write to PPU
   lda nmis

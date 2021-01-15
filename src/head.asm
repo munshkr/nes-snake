@@ -16,7 +16,14 @@
 
 .enum $0000 ; Zero Page variables
 
-nmis    .dsb 1
+nmis      .dsb 1
+cur_keys  .dsb 2
+new_keys  .dsb 2
+
+; read_pads (pads.asm)
+thisRead      .dsb 2
+firstRead     .dsb 2
+lastFrameKeys .dsb 2
 
 .ende
 
