@@ -23,8 +23,10 @@ new_keys  .dsb 2
 ticks     .dsb 1
 
 ; player
-snake_px    .dsb 1
-snake_py    .dsb 1
+snake_px        .dsb 1
+snake_py        .dsb 1
+snake_dir       .dsb 1
+snake_dir_now   .dsb 1
 
 ; read_pads (pads.asm)
 thisRead      .dsb 2

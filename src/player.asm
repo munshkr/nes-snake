@@ -3,19 +3,62 @@ init_player:
     sta snake_px
     lda #$70
     sta snake_py
+    lda #1
+    sta snake_dir
     rts
 
 move_player:
-    ; TODO: change snake direction based on cur_keys dir pads
+    ; change snake direction based on cur_keys dir pads
+    lda cur_keys
+    and #KEY_RIGHT
+    beq @notRight
+    sta snake_dir_now
+@notRight:
+    lda cur_keys
+    and #KEY_LEFT
+    beq @notLeft
+    sta snake_dir_now
+@notLeft:
+    lda cur_keys
+    and #KEY_DOWN
+    beq @notDown
+    sta snake_dir_now
+@notDown:
+    lda cur_keys
+    and #KEY_UP
+    beq @notUp
+    sta snake_dir_now
+@notUp:
 
     dec ticks               ; advance game tick
     bne @skip
-    lda snake_px            ; move snake to the right 8 pixels
-    adc #8
-    sta snake_px
+    lda snake_dir_now       ; game has ticked. now we can update direction
+    sta snake_dir
     lda #GAME_TICKS         ; reset ticks variable
     sta ticks
 @skip:
+
+move_sprite:
+    lda snake_dir
+    and #KEY_RIGHT
+    beq @notRight
+    inc snake_px
+@notRight:
+    lda snake_dir
+    and #KEY_LEFT
+    beq @notLeft
+    dec snake_px
+@notLeft:
+    lda snake_dir
+    and #KEY_DOWN
+    beq @notDown
+    inc snake_py
+@notDown:
+    lda snake_dir
+    and #KEY_UP
+    beq @notUp
+    dec snake_py
+@notUp:
 
     rts
 
