@@ -20,6 +20,10 @@ nmis      .dsb 1
 cur_keys  .dsb 2
 new_keys  .dsb 2
 
+; player
+snake_px    .dsb 1
+snake_py    .dsb 1
+
 ; read_pads (pads.asm)
 thisRead      .dsb 2
 firstRead     .dsb 2

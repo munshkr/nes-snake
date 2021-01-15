@@ -12,14 +12,8 @@ load_palettes:
     cpx #$20              ; there are 2 palettes (bg and sprites), each of 16/$10 bytes
     bne @loop
 
-load_sprites:
-    ldx #$00              ; start at 0
-@loop:
-    lda sprites, x        ; load data from address (sprites +  x)
-    sta $0200, x          ; store into ram address ($0200 + x)
-    inx                   ; x = x + 1
-    cpx #$4              ; 16/$10 sprites * 4 bytes for each sprite = 64/$40
-    bne @loop
+setup_ppu:
+    jsr init_player
 
     lda #%10000000        ; enable nmi, sprites from pattern table 1
     sta PPUCTRL
