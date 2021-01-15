@@ -16,18 +16,18 @@
 
 .enum $0000 ; Zero Page variables
 
-screenPtr       .dsb 2
-metaTile        .dsb 1
-counter         .dsb 1
-rowCounter      .dsb 1
-softPPU_Control .dsb 1
-softPPU_Mask    .dsb 1
+; screenPtr       .dsb 2
+; metaTile        .dsb 1
+; counter         .dsb 1
+; rowCounter      .dsb 1
+; softPPUCTRL     .dsb 1
+; softPPUMASK     .dsb 1
 
 .ende
 
 .enum $0400 ; Variables at $0400. Can start on any RAM page
 
-sleeping        .dsb 1
+; sleeping        .dsb 1
 
 .ende
 
@@ -35,17 +35,18 @@ sleeping        .dsb 1
 ;;;   CONSTANTS   ;;;
 ;;;;;;;;;;;;;;;;;;;;;
 
-PRG_COUNT       = 1       ;1 = 16KB, 2 = 32KB
-MIRRORING       = %0001
+PRG_COUNT = 1       ; 1 = 16KB, 2 = 32KB
+MIRRORING = %0001
 
-PPU_Control     .equ $2000
-PPU_Mask        .equ $2001
-PPU_Status      .equ $2002
-PPU_Scroll      .equ $2005
-PPU_Address     .equ $2006
-PPU_Data        .equ $2007
-
-spriteRAM       .equ $0200
+PPUCTRL   .equ $2000
+PPUMASK   .equ $2001
+PPUSTATUS .equ $2002
+OAMADDR   .equ $2003
+OAMDATA   .equ $2004
+PPUSCROLL .equ $2005
+PPUADDR   .equ $2006
+PPUDATA   .equ $2007
+OAMDMA    .equ $4014
 
 .org $c000
 
@@ -61,12 +62,12 @@ reset:
   ldx #$ff
   txs             ; set up stack
   inx             ; now x = 0
-  stx PPU_Control ; disable nmi
-  stx PPU_Mask    ; disable rendering
+  stx PPUCTRL     ; disable nmi
+  stx PPUMASK     ; disable rendering
   stx $4010       ; disable dmc irqs
 
 vblankwait1:      ; first wait for vblank to make sure ppu is ready
-  bit PPU_Status
+  bit PPUSTATUS
   bpl vblankwait1
 
 clrmem:
@@ -84,5 +85,5 @@ clrmem:
   bne clrmem
 
 vblankwait2:      ; second wait for vblank, ppu is ready after this
-  bit PPU_Status
+  bit PPUSTATUS
   bpl vblankwait2
