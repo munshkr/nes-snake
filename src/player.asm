@@ -3,8 +3,10 @@ init_player:
     sta snake_px
     lda #$70
     sta snake_py
-    lda #1
+    lda #0
     sta snake_dir
+    lda #5
+    sta snake_tile
     rts
 
 move_player:
@@ -31,12 +33,38 @@ move_player:
 @notUp:
 
     dec ticks               ; advance game tick
-    bne @skip
+    bne skip_game_tick
     lda snake_dir_now       ; game has ticked. now we can update direction
     sta snake_dir
+
+update_sprite_tile:
+    ldx #1
+    and #KEY_UP
+    beq @notUp
+    stx snake_tile
+@notUp:
+    inx
+    lda snake_dir
+    and #KEY_DOWN
+    beq @notDown
+    stx snake_tile
+@notDown:
+    inx
+    lda snake_dir
+    and #KEY_LEFT
+    beq @notLeft
+    stx snake_tile
+@notLeft:
+    inx
+    lda snake_dir
+    and #KEY_RIGHT
+    beq @notRight
+    stx snake_tile
+@notRight:
+
     lda #GAME_TICKS         ; reset ticks variable
     sta ticks
-@skip:
+skip_game_tick:
 
 move_sprite:
     lda snake_dir
@@ -65,7 +93,7 @@ move_sprite:
 draw_player:
     lda snake_py
     sta $200
-    lda #$05
+    lda snake_tile
     sta $201
     lda #0
     sta $202

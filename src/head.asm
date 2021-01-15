@@ -27,6 +27,7 @@ snake_px        .dsb 1
 snake_py        .dsb 1
 snake_dir       .dsb 1
 snake_dir_now   .dsb 1
+snake_tile      .dsb 1
 
 ; read_pads (pads.asm)
 thisRead      .dsb 2
