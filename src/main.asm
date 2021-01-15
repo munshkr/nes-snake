@@ -1,27 +1,27 @@
-loadpalettes:
+load_palettes:
   lda PPU_Status        ; read ppu status to reset the high/low latch
   lda #$3f
-  sta PPU_Address       ; write the high byte of $3f00 address
+  sta PPU_Address       ; write the high byte of $3f00 address (where palettes should be stored)
   lda #$00
   sta PPU_Address       ; write the low byte of $3f00 address
   ldx #$00              ; start out at 0
 
-loadpalettesloop:
+load_palettes_loop:
   lda palette, x        ; load data from address (palette + the value in x)
   sta PPU_Data          ; write to ppu
   inx                   ; x = x + 1
-  cpx #$20              ; compare x to hex $10, decimal 16 - copying 16 bytes = 4 sprites
-  bne loadpalettesloop
+  cpx #$20              ; there are 2 palettes (bg and sprites), each of 16/$10 bytes
+  bne load_palettes_loop
 
-loadsprites:
+load_sprites:
   ldx #$00              ; start at 0
 
-loadspritesloop:
+load_sprites_loop:
   lda sprites, x        ; load data from address (sprites +  x)
   sta $0200, x          ; store into ram address ($0200 + x)
   inx                   ; x = x + 1
-  cpx #$40              ; compare x to hex $20, decimal 32
-  bne loadspritesloop
+  cpx #$40              ; 16/$10 sprites * 4 bytes for each sprite = 64/$40
+  bne load_sprites_loop
 
   lda #%10000000        ; enable nmi, sprites from pattern table 1
   sta PPU_Control
