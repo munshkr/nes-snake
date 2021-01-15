@@ -2,19 +2,19 @@
 ;;;   iNES HEADER   ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;
 
-    .db  "NES", $1a     ;identification of the iNES header
-    .db  PRG_COUNT      ;number of 16KB PRG-ROM pages
-    .db  $01            ;number of 8KB CHR-ROM pages
-    .db  $70|MIRRORING  ;mapper 7
-    .dsb $09, $00       ;clear the remaining bytes
+.db  "NES", $1a     ;identification of the iNES header
+.db  PRG_COUNT      ;number of 16KB PRG-ROM pages
+.db  $01            ;number of 8KB CHR-ROM pages
+.db  $70|MIRRORING  ;mapper 7
+.dsb $09, $00       ;clear the remaining bytes
 
-    .fillvalue $FF      ; Sets all unused space in rom to value $FF
+.fillvalue $FF      ; Sets all unused space in rom to value $FF
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;   VARIABLES   ;;;
 ;;;;;;;;;;;;;;;;;;;;;
 
-    .enum $0000 ; Zero Page variables
+.enum $0000 ; Zero Page variables
 
 screenPtr       .dsb 2
 metaTile        .dsb 1
@@ -23,13 +23,13 @@ rowCounter      .dsb 1
 softPPU_Control .dsb 1
 softPPU_Mask    .dsb 1
 
-    .ende
+.ende
 
-    .enum $0400 ; Variables at $0400. Can start on any RAM page
+.enum $0400 ; Variables at $0400. Can start on any RAM page
 
 sleeping        .dsb 1
 
-    .ende
+.ende
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;   CONSTANTS   ;;;
@@ -46,42 +46,43 @@ PPU_Address     .equ $2006
 PPU_Data        .equ $2007
 
 spriteRAM       .equ $0200
-    .org $C000
-    
+
+.org $C000
+
 ;;;;;;;;;;;;;;;;;
 ;;;   RESET   ;;;
 ;;;;;;;;;;;;;;;;;
 
-RESET:
-  SEI          ; disable IRQs
-  CLD          ; disable decimal mode
-  LDX #$40
-  STX $4017    ; disable APU frame IRQ
-  LDX #$FF
-  TXS          ; Set up stack
-  INX          ; now X = 0
-  STX $2000    ; disable NMI
-  STX $2001    ; disable rendering
-  STX $4010    ; disable DMC IRQs
+reset:
+  sei          ; disable irqs
+  cld          ; disable decimal mode
+  ldx #$40
+  stx $4017    ; disable apu frame irq
+  ldx #$ff
+  txs          ; set up stack
+  inx          ; now x = 0
+  stx $2000    ; disable nmi
+  stx $2001    ; disable rendering
+  stx $4010    ; disable dmc irqs
 
-Vblankwait1:       ; First wait for vblank to make sure PPU is ready
-  BIT $2002
-  BPL Vblankwait1
+vblankwait1:       ; first wait for vblank to make sure ppu is ready
+  bit $2002
+  bpl vblankwait1
 
-Clrmem:
-  LDA #$00
-  STA $0000, x
-  STA $0100, x
-  STA $0300, x
-  STA $0400, x
-  STA $0500, x
-  STA $0600, x
-  STA $0700, x
-  LDA #$FE
-  STA $0200, x    ;move all sprites off screen
-  INX
-  BNE Clrmem
-   
-Vblankwait2:      ; Second wait for vblank, PPU is ready after this
-  BIT $2002
-  BPL Vblankwait2
+clrmem:
+  lda #$00
+  sta $0000, x
+  sta $0100, x
+  sta $0300, x
+  sta $0400, x
+  sta $0500, x
+  sta $0600, x
+  sta $0700, x
+  lda #$fe
+  sta $0200, x    ; move all sprites off screen
+  inx
+  bne clrmem
+
+vblankwait2:      ; second wait for vblank, ppu is ready after this
+  bit $2002
+  bpl vblankwait2
