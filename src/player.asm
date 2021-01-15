@@ -6,6 +6,17 @@ init_player:
     rts
 
 move_player:
+    ; TODO: change snake direction based on cur_keys dir pads
+
+    dec ticks               ; advance game tick
+    bne @skip
+    lda snake_px            ; move snake to the right 8 pixels
+    adc #8
+    sta snake_px
+    lda #GAME_TICKS         ; reset ticks variable
+    sta ticks
+@skip:
+
     rts
 
 draw_player:

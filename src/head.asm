@@ -16,9 +16,11 @@
 
 .enum $0000 ; Zero Page variables
 
+; main
 nmis      .dsb 1
 cur_keys  .dsb 2
 new_keys  .dsb 2
+ticks     .dsb 1
 
 ; player
 snake_px    .dsb 1
@@ -42,15 +44,26 @@ lastFrameKeys .dsb 2
 PRG_COUNT = 1       ; 1 = 16KB, 2 = 32KB
 MIRRORING = %0001
 
-PPUCTRL   .equ $2000
-PPUMASK   .equ $2001
-PPUSTATUS .equ $2002
-OAMADDR   .equ $2003
-OAMDATA   .equ $2004
-PPUSCROLL .equ $2005
-PPUADDR   .equ $2006
-PPUDATA   .equ $2007
-OAMDMA    .equ $4014
+PPUCTRL   = $2000
+PPUMASK   = $2001
+PPUSTATUS = $2002
+OAMADDR   = $2003
+OAMDATA   = $2004
+PPUSCROLL = $2005
+PPUADDR   = $2006
+PPUDATA   = $2007
+OAMDMA    = $4014
+
+KEY_A      = %10000000
+KEY_B      = %01000000
+KEY_SELECT = %00100000
+KEY_START  = %00010000
+KEY_UP     = %00001000
+KEY_DOWN   = %00000100
+KEY_LEFT   = %00000010
+KEY_RIGHT  = %00000001
+
+GAME_TICKS = 20
 
 .org $c000
 

@@ -12,8 +12,11 @@ load_palettes:
     cpx #$20              ; there are 2 palettes (bg and sprites), each of 16/$10 bytes
     bne @loop
 
-setup_ppu:
+setup:
     jsr init_player
+
+    lda #GAME_TICKS
+    sta ticks
 
     lda #%10000000        ; enable nmi, sprites from pattern table 1
     sta PPUCTRL
