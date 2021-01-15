@@ -18,7 +18,7 @@ load_sprites_loop:
   lda sprites, x        ; load data from address (sprites +  x)
   sta $0200, x          ; store into ram address ($0200 + x)
   inx                   ; x = x + 1
-  cpx #$40              ; 16/$10 sprites * 4 bytes for each sprite = 64/$40
+  cpx #$4              ; 16/$10 sprites * 4 bytes for each sprite = 64/$40
   bne load_sprites_loop
 
   lda #%10000000        ; enable nmi, sprites from pattern table 1
@@ -26,13 +26,24 @@ load_sprites_loop:
   lda #%00010000        ; enable sprites
   sta PPUMASK
 
-forever:
-  jmp forever           ; jump back to forever, infinite loop
+main:
+  ; Game logic
+  ; ...
+
+  ; Wait for vblank to write to PPU
+  lda nmis
+vblankwait:
+  cmp nmis
+  beq vblankwait
+
+  ; Update OAM
+  lda #$00
+  sta OAMADDR        ; set the low byte (00) of the ram address
+  lda #$02
+  sta OAMDMA         ; set the high byte (02) of the ram address, start the transfer
+
+  jmp main           ; jump back to forever, infinite loop
 
 nmi:
-  lda #$00
-  sta OAMADDR           ; set the low byte (00) of the ram address
-  lda #$02
-  sta OAMDMA            ; set the high byte (02) of the ram address, start the transfer
-
-  rti                   ; return from interrupt
+  inc nmis           ; trigger NMI signal on main routine
+  rti

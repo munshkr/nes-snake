@@ -16,18 +16,11 @@
 
 .enum $0000 ; Zero Page variables
 
-; screenPtr       .dsb 2
-; metaTile        .dsb 1
-; counter         .dsb 1
-; rowCounter      .dsb 1
-; softPPUCTRL     .dsb 1
-; softPPUMASK     .dsb 1
+nmis    .dsb 1
 
 .ende
 
 .enum $0400 ; Variables at $0400. Can start on any RAM page
-
-; sleeping        .dsb 1
 
 .ende
 

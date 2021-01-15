@@ -10,22 +10,4 @@ palette:
 
 sprites:
      ;vert tile attr horiz
-  .db $60, $07, $00, $60   ;sprite 0
-  .db $60, $08, $00, $68   ;sprite 1
-  .db $60, $07, $00, $70   ;sprite 2
-  .db $60, $08, $00, $78   ;sprite 3
-
-  .db $68, $09, $00, $60   ;sprite 0
-  .db $68, $0b, $00, $68   ;sprite 1
-  .db $68, $0c, $00, $70   ;sprite 2
-  .db $68, $0a, $00, $78   ;sprite 3
-
-  .db $70, $07, $00, $60   ;sprite 0
-  .db $70, $0c, $00, $68   ;sprite 1
-  .db $70, $0b, $00, $70   ;sprite 2
-  .db $70, $08, $00, $78   ;sprite 3
-
-  .db $78, $09, $00, $60   ;sprite 0
-  .db $78, $0a, $00, $68   ;sprite 1
-  .db $78, $09, $00, $70   ;sprite 2
-  .db $78, $0a, $00, $78   ;sprite 3
+  .db $70, $05, $00, $80   ;sprite 0
