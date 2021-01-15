@@ -14,27 +14,35 @@ move_player:
     lda cur_keys
     and #KEY_RIGHT
     beq @notRight
-    sta snake_dir_now
+    sta snake_next_dir
 @notRight:
     lda cur_keys
     and #KEY_LEFT
     beq @notLeft
-    sta snake_dir_now
+    sta snake_next_dir
 @notLeft:
     lda cur_keys
     and #KEY_DOWN
     beq @notDown
-    sta snake_dir_now
+    sta snake_next_dir
 @notDown:
     lda cur_keys
     and #KEY_UP
     beq @notUp
-    sta snake_dir_now
+    sta snake_next_dir
 @notUp:
+
+    ; if current direction is right or left
+    ; and next direction is the opposite, change immediately
+    ; TODO
+
+    ; if current direction is up or down
+    ; and next direction is the opposite, change immediately
+    ; TODO
 
     dec ticks               ; advance game tick
     bne skip_game_tick
-    lda snake_dir_now       ; game has ticked. now we can update direction
+    lda snake_next_dir       ; game has ticked. now we can update direction (from left/right to up/down or viceversa)
     sta snake_dir
 
 update_sprite_tile:
