@@ -8,7 +8,7 @@
 .db  $70|MIRRORING  ;mapper 7
 .dsb $09, $00       ;clear the remaining bytes
 
-.fillvalue $FF      ; Sets all unused space in rom to value $FF
+.fillvalue $ff      ; Sets all unused space in rom to value $ff
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;   VARIABLES   ;;;
@@ -47,26 +47,26 @@ PPU_Data        .equ $2007
 
 spriteRAM       .equ $0200
 
-.org $C000
+.org $c000
 
 ;;;;;;;;;;;;;;;;;
 ;;;   RESET   ;;;
 ;;;;;;;;;;;;;;;;;
 
 reset:
-  sei          ; disable irqs
-  cld          ; disable decimal mode
+  sei             ; disable irqs
+  cld             ; disable decimal mode
   ldx #$40
-  stx $4017    ; disable apu frame irq
+  stx $4017       ; disable apu frame irq
   ldx #$ff
-  txs          ; set up stack
-  inx          ; now x = 0
-  stx $2000    ; disable nmi
-  stx $2001    ; disable rendering
-  stx $4010    ; disable dmc irqs
+  txs             ; set up stack
+  inx             ; now x = 0
+  stx PPU_Control ; disable nmi
+  stx PPU_Mask    ; disable rendering
+  stx $4010       ; disable dmc irqs
 
-vblankwait1:       ; first wait for vblank to make sure ppu is ready
-  bit $2002
+vblankwait1:      ; first wait for vblank to make sure ppu is ready
+  bit PPU_Status
   bpl vblankwait1
 
 clrmem:
@@ -84,5 +84,5 @@ clrmem:
   bne clrmem
 
 vblankwait2:      ; second wait for vblank, ppu is ready after this
-  bit $2002
+  bit PPU_Status
   bpl vblankwait2
