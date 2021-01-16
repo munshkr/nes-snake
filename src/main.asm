@@ -1,26 +1,15 @@
-load_palettes:
-    lda PPUSTATUS         ; read ppu status to reset the high/low latch
-    lda #$3f
-    sta PPUADDR           ; write the high byte of $3f00 address (where palettes should be stored)
-    lda #$00
-    sta PPUADDR           ; write the low byte of $3f00 address
-    ldx #$00              ; start out at 0
-@loop:
-    lda palette, x        ; load data from address (palette + the value in x)
-    sta PPUDATA           ; write to ppu
-    inx                   ; x = x + 1
-    cpx #$20              ; there are 2 palettes (bg and sprites), each of 16/$10 bytes
-    bne @loop
-
 setup:
+    jsr load_palettes
+    ; jsr load_background
     jsr init_player
 
     lda #GAME_TICKS
     sta ticks
 
-    lda #%10000000        ; enable nmi, sprites from pattern table 1
+    ; lda #%10010000        ; enable nmi, sprites from pattern table 0 and bg from 1
+    lda #%10000000        ; enable nmi, sprites from pattern table 0 only
     sta PPUCTRL
-    lda #%00010000        ; enable sprites
+    lda #%00011000        ; enable sprites
     sta PPUMASK
 
 main:
@@ -42,6 +31,56 @@ main:
     sta OAMDMA         ; set the high byte (02) of the ram address, start the transfer
 
     jmp main           ; jump back to forever, infinite loop
+
+
+load_palettes:
+    lda PPUSTATUS         ; read ppu status to reset the high/low latch
+    lda #$3f
+    sta PPUADDR           ; write the high byte of $3f00 address (where palettes should be stored)
+    lda #$00
+    sta PPUADDR           ; write the low byte of $3f00 address
+    ldx #$00              ; start out at 0
+@loop:
+    lda palette, x        ; load data from address (palette + the value in x)
+    sta PPUDATA           ; write to ppu
+    inx                   ; x = x + 1
+    cpx #$20              ; there are 2 palettes (bg and sprites), each of 16/$10 bytes
+    bne @loop
+    rts
+
+
+load_background:
+    ;; set nt #0
+    lda #$20
+    sta PPUADDR
+    lda #$00
+    sta PPUADDR
+
+    lda #$2a
+    ldx #$100
+@loop:
+    sta PPUDATA
+    sta PPUDATA
+    sta PPUDATA
+    sta PPUDATA
+    dex
+    bne @loop
+
+    ;; set attributes for nt #0
+    lda #$23
+    sta PPUADDR
+    lda #$c0
+    sta PPUADDR
+
+    lda #%11111111
+    ldx #$40
+@attrLoop:
+    sta PPUDATA
+    dex
+    bne @attrLoop
+
+    rts
+
 
 nmi:
     inc nmis           ; trigger NMI signal on main routine

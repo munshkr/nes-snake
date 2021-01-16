@@ -1,7 +1,7 @@
 init_player:
-    lda #$80
+    lda #$81
     sta snake_px
-    lda #$70
+    lda #$76
     sta snake_py
     lda #0
     sta snake_dir
