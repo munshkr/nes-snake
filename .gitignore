@@ -1,2 +1,4 @@
 *.cdl
 *.ram.nl
+*.dbg
+*.wch
