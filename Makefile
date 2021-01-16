@@ -2,11 +2,14 @@
 
 ROM := snake.nes
 
+AS65 := asm6
+EMU := fceux
+
 run: $(ROM)
-	fceux $<
+	$(EMU) $<
 
 $(ROM): $(wildcard src/*)
-	asm6 src/cart.asm $@
+	$(AS65) src/cart.asm $@
 
 clean:
 	rm -f $(ROM)

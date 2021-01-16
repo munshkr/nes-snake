@@ -9,6 +9,7 @@ init_player:
     sta snake_tile
     rts
 
+
 move_player:
     ;; change snake direction based on cur_keys dir pads
     lda cur_keys
@@ -89,6 +90,7 @@ move_sprite:
 @notUp:
 
     rts
+
 
 draw_player:
     lda snake_py
