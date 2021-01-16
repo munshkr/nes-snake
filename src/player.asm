@@ -10,7 +10,7 @@ init_player:
     rts
 
 move_player:
-    ; change snake direction based on cur_keys dir pads
+    ;; change snake direction based on cur_keys dir pads
     lda cur_keys
     and #KEY_RIGHT
     beq @notRight
@@ -32,15 +32,7 @@ move_player:
     sta snake_next_dir
 @notUp:
 
-    ; if current direction is right or left
-    ; and next direction is the opposite, change immediately
-    ; TODO
-
-    ; if current direction is up or down
-    ; and next direction is the opposite, change immediately
-    ; TODO
-
-    dec ticks               ; advance game tick
+    dec ticks                ; advance game tick
     bne skip_game_tick
     lda snake_next_dir       ; game has ticked. now we can update direction (from left/right to up/down or viceversa)
     sta snake_dir
