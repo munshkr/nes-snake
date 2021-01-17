@@ -7,4 +7,4 @@ include "src/prng.asm"
 include "src/tables.asm"
 include "src/vectors.asm"
 
-.incbin "src/sprite.chr"
+.incbin "src/game.chr"
