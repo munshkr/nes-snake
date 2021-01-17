@@ -1,3 +1,44 @@
+;;;;;;;;;;;;;;;;;;;;;
+;;;   VARIABLES   ;;;
+;;;;;;;;;;;;;;;;;;;;;
+
+.enum $0000 ; Zero Page variables
+
+; main
+nmis      .dsb 1
+cur_keys  .dsb 2
+new_keys  .dsb 2
+ticks     .dsb 1
+
+; player
+snake_px        .dsb 1
+snake_py        .dsb 1
+snake_dir       .dsb 1
+snake_next_dir  .dsb 1
+snake_tile      .dsb 1
+
+; apples.asm
+apple_px        .dsb 1
+apple_py        .dsb 1
+
+; pads.asm
+thisRead      .dsb 2
+firstRead     .dsb 2
+lastFrameKeys .dsb 2
+
+; prng.asm
+seed    .dsb 2
+
+.ende
+
+.enum $0400 ; Variables at $0400. Can start on any RAM page
+
+.ende
+
+;;;;;;;;;;;;;;;;
+;;;   CODE   ;;;
+;;;;;;;;;;;;;;;;
+
 setup:
     jsr load_palettes
     ; jsr load_background
