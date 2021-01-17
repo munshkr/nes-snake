@@ -2,9 +2,15 @@ setup:
     jsr load_palettes
     ; jsr load_background
     jsr init_player
+    jsr spawn_apple
 
     lda #GAME_TICKS
     sta ticks
+
+    ;; FIXME: should set a random seed based on the elapsed time between now and
+    ;; when the user presses Start, or something like that...
+    lda #$40
+    sta seed
 
     ; lda #%10010000        ; enable nmi, sprites from pattern table 0 and bg from 1
     lda #%10000000        ; enable nmi, sprites from pattern table 0 only
@@ -16,7 +22,10 @@ main:
     ; Game logic
     jsr read_pads
     jsr move_player
+
+    ; Drawing
     jsr draw_player
+    jsr draw_apple
 
     ; Wait for vblank to write to PPU
     lda nmis

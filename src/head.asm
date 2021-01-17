@@ -29,10 +29,17 @@ snake_dir       .dsb 1
 snake_next_dir  .dsb 1
 snake_tile      .dsb 1
 
-; read_pads (pads.asm)
+; apples.asm
+apple_px        .dsb 1
+apple_py        .dsb 1
+
+; pads.asm
 thisRead      .dsb 2
 firstRead     .dsb 2
 lastFrameKeys .dsb 2
+
+; prng.asm
+seed    .dsb 2
 
 .ende
 
@@ -67,6 +74,8 @@ KEY_LEFT   = %00000010
 KEY_RIGHT  = %00000001
 
 GAME_TICKS = 8
+BASE_X_OFFSET = 1
+BASE_Y_OFFSET = 6
 
 .org $c000
 
