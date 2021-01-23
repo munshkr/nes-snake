@@ -41,45 +41,15 @@ seed    .dsb 2
 
 setup:
     jsr load_palettes
-    ; jsr load_background
-    jsr init_player
-    jsr spawn_apple
 
-    lda #GAME_TICKS
-    sta ticks
-
-    ;; FIXME: should set a random seed based on the elapsed time between now and
-    ;; when the user presses Start, or something like that...
-    lda #$40
-    sta seed
-
-    ; lda #%10010000        ; enable nmi, sprites from pattern table 0 and bg from 1
-    lda #%10000000        ; enable nmi, sprites from pattern table 0 only
+    lda #%10010000        ; enable nmi, sprites from pattern table 0 and bg from 1
     sta PPUCTRL
     lda #%00011000        ; enable sprites
     sta PPUMASK
 
 main:
-    ; Game logic
-    jsr read_pads
-    jsr move_player
-
-    ; Drawing
-    jsr draw_player
-    jsr draw_apple
-
-    ; Wait for vblank to write to PPU
-    lda nmis
-@vblankwait
-    cmp nmis
-    beq @vblankwait
-
-    ; Update OAM
-    lda #$00
-    sta OAMADDR        ; set the low byte (00) of the ram address
-    lda #$02
-    sta OAMDMA         ; set the high byte (02) of the ram address, start the transfer
-
+    jsr title_screen
+    jsr game_loop
     jmp main           ; jump back to forever, infinite loop
 
 
@@ -99,15 +69,15 @@ load_palettes:
     rts
 
 
-load_background:
+clear_background:
     ;; set nt #0
     lda #$20
     sta PPUADDR
     lda #$00
     sta PPUADDR
 
-    lda #$2a
-    ldx #$100
+    lda #$01
+    ldx #$80
 @loop:
     sta PPUDATA
     sta PPUDATA
@@ -128,6 +98,52 @@ load_background:
     sta PPUDATA
     dex
     bne @attrLoop
+
+    rts
+
+
+title_screen:
+    jsr clear_background
+@loop:
+    jmp @loop
+    rts
+
+
+game_loop:
+    ; jsr load_background
+    jsr init_player
+    jsr spawn_apple
+
+    lda #GAME_TICKS
+    sta ticks
+
+    ;; FIXME: should set a random seed based on the elapsed time between now and
+    ;; when the user presses Start, or something like that...
+    lda #$40
+    sta seed
+
+@loop:
+    ; Game logic
+    jsr read_pads
+    jsr move_player
+
+    ; Drawing
+    jsr draw_player
+    jsr draw_apple
+
+    ; Wait for vblank to write to PPU
+    lda nmis
+@vblankwait
+    cmp nmis
+    beq @vblankwait
+
+    ; Update OAM
+    lda #$00
+    sta OAMADDR         ; set the low byte (00) of the ram address
+    lda #$02
+    sta OAMDMA          ; set the high byte (02) of the ram address, start the transfer
+
+    jmp @loop           ; for now, loop infinitely
 
     rts
 
