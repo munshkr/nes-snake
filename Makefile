@@ -1,15 +1,36 @@
 .PHONY: run clean
 
-ROM := snake.nes
+objdir := obj
+srcdir := src
+objlist := crt0 main
 
-AS65 := asm6
+rom := snake.nes
+config := $(srcdir)/nrom128.cfg
+
+CC65 := cc65
+CA65 := ca65
+LD65 := ld65
+CFLAGS65 :=
 EMU := fceux
 
-run: $(ROM)
+run: $(rom)
 	$(EMU) $<
 
-$(ROM): $(wildcard src/*)
-	$(AS65) src/cart.asm $@
+# Rules for PRG ROM
+
+objlistfiles = $(foreach o,$(objlist),$(objdir)/$(o).o)
+
+map.txt $(rom): $(objlistfiles) $(wildcard $(srcdir)/*)
+	$(LD65) -o $(rom) -m map.txt -C $(config) $(objlistfiles) $(srcdir)/nes.lib
+
+$(objdir)/%.o: $(srcdir)/%.s
+	$(CA65) $(CFLAGS65) $< -o $@
+
+$(objdir)/%.o: $(objdir)/%.s
+	$(CA65) $(CFLAGS65) $< -o $@
+
+$(objdir)/%.s: $(srcdir)/%.c
+	$(CC65) $(CFLAGS65) $< -o $@
 
 clean:
-	rm -f $(ROM)
+	@rm -rf $(objdir)/*
